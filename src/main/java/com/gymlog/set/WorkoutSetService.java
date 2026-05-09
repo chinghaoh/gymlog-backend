@@ -1,5 +1,6 @@
 package com.gymlog.set;
 
+import com.gymlog.common.AppException;
 import com.gymlog.exercise.Exercise;
 import com.gymlog.exercise.ExerciseRepository;
 import com.gymlog.record.PersonalRecordService;
@@ -7,6 +8,7 @@ import com.gymlog.stats.UserExerciseStatsService;
 import com.gymlog.workout.Workout;
 import com.gymlog.workout.WorkoutRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -48,10 +50,12 @@ public class WorkoutSetService {
     @Transactional
     public WorkoutSetDto addSet(Long workoutId, Long exerciseId, WorkoutSetDto dto) {
         Workout workout = workoutRepository.findById(workoutId)
-                .orElseThrow(() -> new RuntimeException("Workout not found with id: " + workoutId));
+                .orElseThrow(() -> new AppException(
+                        HttpStatus.NOT_FOUND, "Workout not found with id: " + workoutId));
 
         Exercise exercise = exerciseRepository.findById(exerciseId)
-                .orElseThrow(() -> new RuntimeException("Exercise not found with id: " + exerciseId));
+                .orElseThrow(() -> new AppException(
+                        HttpStatus.NOT_FOUND, "Exercise not found with id: " + exerciseId));
 
         WorkoutSet workoutSet = WorkoutSet.builder()
                 .workout(workout)
@@ -74,7 +78,8 @@ public class WorkoutSetService {
     @Transactional
     public WorkoutSetDto updateSet(Long id, WorkoutSetDto dto) {
         WorkoutSet existing = workoutSetRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("WorkoutSet not found with id: " + id));
+                .orElseThrow(() -> new AppException(
+                        HttpStatus.NOT_FOUND, "WorkoutSet not found with id: " + id));
         existing.setSetNumber(dto.getSetNumber());
         existing.setReps(dto.getReps());
         existing.setWeight(dto.getWeight());

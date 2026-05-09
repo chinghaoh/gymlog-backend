@@ -1,8 +1,10 @@
 package com.gymlog.exercise;
 
+import com.gymlog.common.AppException;
 import com.gymlog.common.SearchCriteria;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.jpa.domain.Specification;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
@@ -114,6 +116,7 @@ public class ExerciseService {
 
     private Exercise findExerciseOrThrow(Long id) {
         return exerciseRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Exercise not found with id: " + id));
+                .orElseThrow(() -> new AppException(
+                        HttpStatus.NOT_FOUND, "Exercise not found with id: " + id));
     }
 }

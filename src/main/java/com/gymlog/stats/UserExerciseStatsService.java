@@ -1,10 +1,12 @@
 package com.gymlog.stats;
 
+import com.gymlog.common.AppException;
 import com.gymlog.workout.Workout;
 import com.gymlog.set.WorkoutSet;
 import com.gymlog.set.WorkoutSetRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.math.BigDecimal;
@@ -174,8 +176,8 @@ public class UserExerciseStatsService {
         return statsRepository
                 .findByUserIdAndExerciseId(userId, exerciseId)
                 .map(this::mapToDto)
-                .orElseThrow(() -> new RuntimeException(
-                        "No stats found for user " + userId +
-                                " and exercise " + exerciseId));
+                .orElseThrow(() -> new AppException(
+                        HttpStatus.NOT_FOUND, "No stats found for user " + userId
+                        + " and exercise " + exerciseId));
     }
 }

@@ -1,8 +1,10 @@
 package com.gymlog.workout;
 
+import com.gymlog.common.AppException;
 import com.gymlog.user.User;
 import com.gymlog.user.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
@@ -43,7 +45,8 @@ public class WorkoutService {
     @Transactional
     public WorkoutDto createWorkout(Long userId, WorkoutDto dto) {
         User user = userRepository.findById(userId)
-                .orElseThrow(() -> new RuntimeException("User not found with id: " + userId));
+                .orElseThrow(() -> new AppException(
+                        HttpStatus.NOT_FOUND, "User not found with id: " + userId));
 
         Workout workout = Workout.builder()
                 .user(user)
@@ -78,7 +81,8 @@ public class WorkoutService {
 
     private Workout findWorkoutOrThrow(Long id) {
         return workoutRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Workout not found with id: " + id));
+                .orElseThrow(() -> new AppException(
+                        HttpStatus.NOT_FOUND, "Workout not found with id: " + id));
     }
 
     private WorkoutDto mapToDto(Workout workout) {
