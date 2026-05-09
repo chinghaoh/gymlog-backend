@@ -1,0 +1,41 @@
+version: '3.8'
+
+services:
+
+  postgres:
+    image: postgres:15
+    container_name: gymlog_backend_postgres
+    environment:
+      POSTGRES_DB: gymlog_db
+      POSTGRES_USER: gymlog_user
+      POSTGRES_PASSWORD: gymlog_pass
+    ports:
+      - "5434:5432"
+    volumes:
+      - gymlog_postgres_data:/var/lib/postgresql/data
+    networks:
+      - gymlog_network
+
+  app:
+    build: .
+    container_name: gymlog_backend_app
+    env_file:
+      - .env
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/gymlog_db
+      SPRING_DATASOURCE_USERNAME: gymlog_user
+      SPRING_DATASOURCE_PASSWORD: gymlog_pass
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      - postgres
+    networks:
+      - gymlog_network
+
+volumes:
+  gymlog_postgres_data:
+
+networks:
+  gymlog_network:
+    driver: bridge

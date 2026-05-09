@@ -1,0 +1,1 @@
+ALTER TABLE exercises DROP CONSTRAINT difficulty_check;
