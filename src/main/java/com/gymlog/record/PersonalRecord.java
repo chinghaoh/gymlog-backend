@@ -31,7 +31,7 @@ public class PersonalRecord {
     private Exercise exercise;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name= "workout_id", nullable = false)
+    @JoinColumn(name= "workout_log_id", nullable = false)
     private Workout workout;
 
     @Column(nullable = false, precision = 6, scale = 2)

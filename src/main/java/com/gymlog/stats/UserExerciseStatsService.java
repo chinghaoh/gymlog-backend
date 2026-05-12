@@ -120,27 +120,13 @@ public class UserExerciseStatsService {
     }
 
     private BigDecimal calculateAvgRepsLast5(List<WorkoutSet> allSets) {
+        if (allSets.isEmpty()) return null;
 
-
-        List<WorkoutSet> last5Sessions = allSets.stream()
-                .sorted((a, b) -> b.getWorkout().getDate()
-                        .compareTo(a.getWorkout().getDate()))
-                .collect(Collectors.toList());
-
-        List<Long> last5WorkoutIds = last5Sessions.stream()
-                .map(s -> s.getWorkout().getId())
-                .distinct()
+        List<WorkoutSet> last5Sets = allSets.stream()
+                .sorted((a, b) -> b.getId().compareTo(a.getId()))
                 .limit(5)
                 .collect(Collectors.toList());
 
-        if (last5WorkoutIds.isEmpty()) return null;
-
-        // filter sets to only those in last 5 workouts
-        List<WorkoutSet> last5Sets = last5Sessions.stream()
-                .filter(s -> last5WorkoutIds.contains(s.getWorkout().getId()))
-                .collect(Collectors.toList());
-
-        // average reps across those sets
         double avg = last5Sets.stream()
                 .mapToInt(WorkoutSet::getReps)
                 .average()

@@ -1,18 +1,20 @@
-package com.gymlog.workout;
+package com.gymlog.workoutlog;
 
 import com.gymlog.user.User;
+import com.gymlog.workout.Workout;
 import jakarta.persistence.*;
 import lombok.*;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "workouts")
+@Table(name = "workout_logs")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Workout {
+public class WorkoutLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,15 +24,15 @@ public class Workout {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @Column(nullable = false, length = 150)
-    private String name;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "workout_id", nullable = false)
+    private Workout workout;
 
-    @Enumerated(EnumType.STRING)
-    @Column(nullable = false, length = 50)
-    private SplitCategory splitCategory;
+    @Column(nullable = false)
+    private LocalDate date;
 
     @Column
-    private Integer durationMinutes;
+    private Integer energyLevel;
 
     @Column(columnDefinition = "TEXT")
     private String notes;
