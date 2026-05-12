@@ -2,7 +2,6 @@ package com.gymlog.workout;
 
 import lombok.Getter;
 import lombok.Setter;
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Getter
@@ -13,9 +12,7 @@ public class WorkoutDto {
     private String userName;
     private String name;
     private SplitCategory splitCategory;
-    private LocalDate date;
     private Integer durationMinutes;
-    private Integer energyLevel;
     private String notes;
     private LocalDateTime createdAt;
 }

@@ -1,11 +1,9 @@
 package com.gymlog.workout;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -16,23 +14,13 @@ public class WorkoutController {
     private final WorkoutService workoutService;
 
     @GetMapping
-    public ResponseEntity<List<WorkoutDto>> getWorkoutsByUser(
-            @RequestParam Long userId) {
+    public ResponseEntity<List<WorkoutDto>> getWorkoutsByUser(@RequestParam Long userId) {
         return ResponseEntity.ok(workoutService.getWorkoutsByUserId(userId));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<WorkoutDto> getWorkoutById(@PathVariable Long id) {
         return ResponseEntity.ok(workoutService.getWorkoutById(id));
-    }
-
-    @GetMapping("/range")
-    public ResponseEntity<List<WorkoutDto>> getWorkoutsByDateRange(
-            @RequestParam Long userId,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate start,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate end) {
-        return ResponseEntity.ok(
-                workoutService.getWorkoutsByDateRange(userId, start, end));
     }
 
     @PostMapping
