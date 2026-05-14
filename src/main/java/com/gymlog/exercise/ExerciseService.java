@@ -56,7 +56,7 @@ public class ExerciseService {
         }
         if (name != null && !name.isBlank()) {
             spec = spec.and(new ExerciseSpecification(
-                    new SearchCriteria("name", "=", name)));
+                    new SearchCriteria("name", "like", name)));
         }
 
         return exerciseRepository.findAll(spec)

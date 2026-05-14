@@ -31,6 +31,13 @@ public class ExerciseSpecification implements Specification<Exercise> {
             }
         }
 
+        if (criteria.getOperation().equalsIgnoreCase("like")) {
+            return cb.like(
+                    cb.lower(root.get(criteria.getKey())),
+                    "%" + criteria.getValue().toString().toLowerCase() + "%"
+            );
+        }
+
         if (criteria.getOperation().equalsIgnoreCase(">")) {
             return cb.greaterThanOrEqualTo(
                     root.get(criteria.getKey()),
