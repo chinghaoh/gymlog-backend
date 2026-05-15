@@ -1,9 +1,7 @@
 package com.gymlog.exercise;
 
 import com.gymlog.common.AppException;
-import com.gymlog.common.SearchCriteria;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,28 +36,7 @@ public class ExerciseService {
     public List<ExerciseDto> getExercises(String category, String equipment,
                                           String difficulty, String name) {
 
-        Specification<Exercise> spec = Specification.where(
-                new ExerciseSpecification(new SearchCriteria("isActive", "=", true))
-        );
-
-        if (category != null && !category.isBlank()) {
-            spec = spec.and(new ExerciseSpecification(
-                    new SearchCriteria("category", "=", category)));
-        }
-        if (equipment != null && !equipment.isBlank()) {
-            spec = spec.and(new ExerciseSpecification(
-                    new SearchCriteria("equipment", "=", equipment)));
-        }
-        if (difficulty != null && !difficulty.isBlank()) {
-            spec = spec.and(new ExerciseSpecification(
-                    new SearchCriteria("difficulty", "=", difficulty)));
-        }
-        if (name != null && !name.isBlank()) {
-            spec = spec.and(new ExerciseSpecification(
-                    new SearchCriteria("name", "like", name)));
-        }
-
-        return exerciseRepository.findAll(spec)
+        return exerciseRepository.findByFilters(category, equipment, difficulty, name)
                 .stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
