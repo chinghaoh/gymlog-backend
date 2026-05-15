@@ -40,4 +40,11 @@ public class WorkoutSetController {
         workoutSetService.deleteSet(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/by-exercise")
+    public ResponseEntity<List<WorkoutSetDto>> getSetsByUserAndExercise(
+            @RequestParam Long userId,
+            @RequestParam Long exerciseId) {
+        return ResponseEntity.ok(workoutSetService.getSetsByUserAndExercise(userId, exerciseId));
+    }
 }

@@ -34,6 +34,7 @@ public class WorkoutSetService {
         dto.setReps(set.getReps());
         dto.setWeight(set.getWeight());
         dto.setNotes(set.getNotes());
+        dto.setWorkoutCreatedAt(set.getWorkout().getCreatedAt());
         return dto;
     }
 
@@ -104,5 +105,13 @@ public class WorkoutSetService {
         workoutSetRepository.deleteById(id);
 
         statsService.recalculateAfterDelete(userId, exerciseId);
+    }
+
+    @Transactional(readOnly = true)
+    public List<WorkoutSetDto> getSetsByUserAndExercise(Long userId, Long exerciseId) {
+        return workoutSetRepository.findByUserIdAndExerciseIdOrderByDate(userId, exerciseId)
+                .stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
     }
 }

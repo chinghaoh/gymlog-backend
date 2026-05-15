@@ -3,6 +3,7 @@ package com.gymlog.set;
 import lombok.Getter;
 import lombok.Setter;
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Getter
 @Setter
@@ -15,4 +16,6 @@ public class WorkoutSetDto {
     private Integer reps;
     private BigDecimal weight;
     private String notes;
+    private LocalDateTime workoutCreatedAt;
+
 }
