@@ -37,6 +37,21 @@ public class User {
     @Column(nullable = false)
     private LocalDateTime updatedAt;
 
+    @Column(nullable = false)
+    private Boolean isVerified = false;
+
+    @Column(length = 255)
+    private String verificationToken;
+
+    private LocalDateTime verificationTokenExpiry;
+
+    @Column(length = 255)
+    private String ResetToken;
+
+    private LocalDateTime ResetTokenExpiry;
+
+
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();

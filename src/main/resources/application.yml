@@ -31,6 +31,18 @@ spring:
           model: claude-haiku-4-5-20251001
           max-tokens: 500
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${MAIL_USERNAME}
+    password: ${MAIL_PASSWORD}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 server:
   port: 8080
 
@@ -47,3 +59,8 @@ workoutx:
 jwt:
   secret: ${JWT_SECRET}
   expiration: 86400000
+
+logging:
+  level:
+    org.springframework.web.client: DEBUG
+    com.gymlog: DEBUG
