@@ -1,6 +1,7 @@
 package com.gymlog.workout;
 
 import com.gymlog.common.AppException;
+import com.gymlog.set.WorkoutSetRepository;
 import com.gymlog.user.User;
 import com.gymlog.user.UserRepository;
 import lombok.RequiredArgsConstructor;
@@ -18,6 +19,7 @@ public class WorkoutService {
 
     private final WorkoutRepository workoutRepository;
     private final UserRepository userRepository;
+    private final WorkoutSetRepository workoutSetRepository;
 
     @Transactional(readOnly = true)
     public List<WorkoutDto> getWorkoutsByUserId(Long userId) {
@@ -94,6 +96,8 @@ public class WorkoutService {
         dto.setDurationMinutes(workout.getDurationMinutes());
         dto.setNotes(workout.getNotes());
         dto.setCreatedAt(workout.getCreatedAt());
+        dto.setTotalSets(workoutSetRepository.countByWorkoutId(workout.getId()));
+
         return dto;
     }
 }

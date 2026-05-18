@@ -34,4 +34,7 @@ public interface WorkoutSetRepository extends JpaRepository<WorkoutSet, Long> {
             @Param("userId") Long userId,
             @Param("exerciseId") Long exerciseId
     );
+
+    int countByWorkoutId(Long workoutId);
+
 }

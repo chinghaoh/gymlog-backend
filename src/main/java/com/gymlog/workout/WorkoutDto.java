@@ -14,5 +14,6 @@ public class WorkoutDto {
     private SplitCategory splitCategory;
     private Integer durationMinutes;
     private String notes;
+    private Integer totalSets;
     private LocalDateTime createdAt;
 }
