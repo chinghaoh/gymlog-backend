@@ -114,4 +114,11 @@ public class WorkoutSetService {
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
     }
+
+    @Transactional
+    public List<WorkoutSetDto> addBulkSets(Long workoutId, Long exerciseId, List<WorkoutSetDto> sets) {
+        return sets.stream()
+                .map(dto -> addSet(workoutId, exerciseId, dto))
+                .collect(Collectors.toList());
+    }
 }

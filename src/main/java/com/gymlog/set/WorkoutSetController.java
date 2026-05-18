@@ -47,4 +47,13 @@ public class WorkoutSetController {
             @RequestParam Long exerciseId) {
         return ResponseEntity.ok(workoutSetService.getSetsByUserAndExercise(userId, exerciseId));
     }
+
+    @PostMapping("/bulk")
+    public ResponseEntity<List<WorkoutSetDto>> addBulkSets(
+            @RequestParam Long workoutId,
+            @RequestParam Long exerciseId,
+            @RequestBody List<WorkoutSetDto> sets) {
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(workoutSetService.addBulkSets(workoutId, exerciseId, sets));
+    }
 }
