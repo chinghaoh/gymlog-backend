@@ -46,11 +46,9 @@ public class User {
     private LocalDateTime verificationTokenExpiry;
 
     @Column(length = 255)
-    private String ResetToken;
+    private String resetToken;
 
-    private LocalDateTime ResetTokenExpiry;
-
-
+    private LocalDateTime resetTokenExpiry;
 
     @PrePersist
     protected void onCreate() {

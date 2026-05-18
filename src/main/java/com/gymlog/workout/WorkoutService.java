@@ -7,6 +7,8 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -67,6 +69,19 @@ public class WorkoutService {
         return workoutRepository.findById(id)
                 .orElseThrow(() -> new AppException(
                         HttpStatus.NOT_FOUND, "Workout not found with id: " + id));
+    }
+
+    @Transactional(readOnly = true)
+    public List<WorkoutDto> getWorkoutsByRange(Long userId, String start, String end) {
+        LocalDate startDate = LocalDate.parse(start);
+        LocalDate endDate = LocalDate.parse(end);
+        return workoutRepository.findByUserIdAndCreatedAtBetween(
+                        userId,
+                        startDate.atStartOfDay(),
+                        endDate.atTime(23, 59, 59))
+                .stream()
+                .map(this::mapToDto)
+                .collect(Collectors.toList());
     }
 
     private WorkoutDto mapToDto(Workout workout) {

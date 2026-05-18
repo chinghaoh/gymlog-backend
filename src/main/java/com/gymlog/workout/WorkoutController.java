@@ -43,4 +43,12 @@ public class WorkoutController {
         workoutService.deleteWorkout(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/range")
+    public ResponseEntity<List<WorkoutDto>> getWorkoutsByRange(
+            @RequestParam Long userId,
+            @RequestParam String start,
+            @RequestParam String end) {
+        return ResponseEntity.ok(workoutService.getWorkoutsByRange(userId, start, end));
+    }
 }

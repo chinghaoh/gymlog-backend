@@ -45,12 +45,27 @@ public class EmailService {
     }
 
     public void sendPasswordResetEmail(String to, String token) {
-        SimpleMailMessage message = new SimpleMailMessage();
-        message.setTo(to);
-        message.setSubject("Reset your GymLog password");
-        message.setText("Click the link below to reset your password:\n\n"
-                + "http://localhost:5173/reset-password?token=" + token
-                + "\n\nThis link expires in 30 minutes.");
-        mailSender.send(message);
+        MimeMessage message = mailSender.createMimeMessage();
+        try {
+            MimeMessageHelper helper = new MimeMessageHelper(message, true);
+            helper.setFrom(from);
+            helper.setTo(to);
+            helper.setSubject("Reset your GymLog password");
+            helper.setText(
+                    "<p>Click the link below to reset your password:</p>" +
+                            "<a href='http://localhost:5173/reset-password?token=" +
+                            URLEncoder.encode(token, StandardCharsets.UTF_8) +
+                            "'>Reset my password</a>" +
+                            "<p>This link expires in 30 minutes.</p>",
+                    true
+            );
+            log.info("Sending password reset email to: {}", to);
+            log.info("EmailService reset token: {}", token);
+            mailSender.send(message);
+        } catch (Exception e) {
+            throw new RuntimeException("Failed to send email", e);
+        }
     }
+
+
 }

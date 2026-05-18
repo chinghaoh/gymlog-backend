@@ -118,4 +118,35 @@ public class AuthService {
         user.setVerificationTokenExpiry(null);
         userRepository.save(user);
     }
+
+    @Transactional
+    public void forgotPassword(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(
+                        HttpStatus.NOT_FOUND, "No account found with that email."));
+
+        String resetToken = UUID.randomUUID().toString();
+
+        user.setResetToken(resetToken);
+        user.setResetTokenExpiry(LocalDateTime.now().plusMinutes(30));
+        userRepository.save(user);
+        log.info("Sending password reset email with token: {}", resetToken);
+        emailService.sendPasswordResetEmail(user.getEmail(), resetToken);
+    }
+
+    @Transactional
+    public void resetPassword(String token, String newPassword) {
+        User user = userRepository.findByResetToken(token)
+                .orElseThrow(() -> new AppException(
+                        HttpStatus.BAD_REQUEST, "Invalid or expired reset token."));
+
+        if (user.getResetTokenExpiry().isBefore(LocalDateTime.now())) {
+            throw new AppException(HttpStatus.BAD_REQUEST, "Reset token has expired.");
+        }
+
+        user.setPassword(passwordEncoder.encode(newPassword));
+        user.setResetToken(null);
+        user.setResetTokenExpiry(null);
+        userRepository.save(user);
+    }
 }

@@ -87,4 +87,12 @@ public class UserService {
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
     }
+
+    @Transactional(readOnly = true)
+    public UserDto getUserByEmail(String email) {
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new AppException(
+                        HttpStatus.NOT_FOUND, "User not found with email: " + email));
+        return mapToDto(user);
+    }
 }
