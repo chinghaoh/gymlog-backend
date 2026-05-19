@@ -1,5 +1,6 @@
 package com.gymlog.workout;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,7 +27,7 @@ public class WorkoutController {
     @PostMapping
     public ResponseEntity<WorkoutDto> createWorkout(
             @RequestParam Long userId,
-            @RequestBody WorkoutDto dto) {
+            @Valid @RequestBody WorkoutDto dto) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(workoutService.createWorkout(userId, dto));
     }
@@ -34,7 +35,7 @@ public class WorkoutController {
     @PutMapping("/{id}")
     public ResponseEntity<WorkoutDto> updateWorkout(
             @PathVariable Long id,
-            @RequestBody WorkoutDto dto) {
+            @Valid @RequestBody WorkoutDto dto) {
         return ResponseEntity.ok(workoutService.updateWorkout(id, dto));
     }
 

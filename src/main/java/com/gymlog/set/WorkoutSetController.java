@@ -1,5 +1,6 @@
 package com.gymlog.set;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,7 @@ public class WorkoutSetController {
     public ResponseEntity<WorkoutSetDto> addSet(
             @RequestParam Long workoutId,
             @RequestParam Long exerciseId,
-            @RequestBody WorkoutSetDto dto) {
+            @Valid @RequestBody WorkoutSetDto dto) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(workoutSetService.addSet(workoutId, exerciseId, dto));
     }
@@ -31,7 +32,7 @@ public class WorkoutSetController {
     @PutMapping("/{id}")
     public ResponseEntity<WorkoutSetDto> updateSet(
             @PathVariable Long id,
-            @RequestBody WorkoutSetDto dto) {
+            @Valid @RequestBody WorkoutSetDto dto) {
         return ResponseEntity.ok(workoutSetService.updateSet(id, dto));
     }
 

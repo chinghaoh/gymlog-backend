@@ -1,14 +1,12 @@
 package com.gymlog.auth;
 
-import jakarta.servlet.http.Cookie;
-import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
 import com.gymlog.user.UserDto;
 import com.gymlog.user.UserService;
@@ -24,7 +22,7 @@ public class AuthController {
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(
-            @RequestBody RegisterRequest request,
+            @Valid @RequestBody RegisterRequest request,
             HttpServletResponse response) {
         AuthResponse auth = authService.register(request);
         setJwtCookie(response, auth.getToken());
@@ -33,7 +31,7 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<AuthResponse> login(
-            @RequestBody LoginRequest request,
+            @Valid @RequestBody LoginRequest request,
             HttpServletResponse response) {
         AuthResponse auth = authService.login(request);
         setJwtCookie(response, auth.getToken());
