@@ -4,6 +4,7 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
@@ -19,6 +20,9 @@ public class AuthController {
 
     private final AuthService authService;
     private final UserService userService;
+
+    @Value("${app.cookie.secure}")
+    private boolean secureCookie;
 
     @PostMapping("/register")
     public ResponseEntity<AuthResponse> register(
@@ -50,8 +54,9 @@ public class AuthController {
 
     @PostMapping("/logout")
     public ResponseEntity<Void> logout(HttpServletResponse response) {
-        response.addHeader("Set-Cookie",
-                "jwt=; Path=/; HttpOnly; Max-Age=0; SameSite=Lax");
+        String cookie = "jwt=; Path=/; HttpOnly; Max-Age=0; SameSite=Lax";
+        if (secureCookie) cookie += "; Secure";
+        response.addHeader("Set-Cookie", cookie);
         return ResponseEntity.ok().build();
     }
 
@@ -76,7 +81,8 @@ public class AuthController {
     }
 
     private void setJwtCookie(HttpServletResponse response, String token) {
-        response.addHeader("Set-Cookie",
-                "jwt=" + token + "; Path=/; HttpOnly; Max-Age=86400; SameSite=Lax");
+        String cookie = "jwt=" + token + "; Path=/; HttpOnly; Max-Age=86400; SameSite=Lax";
+        if (secureCookie) cookie += "; Secure";
+        response.addHeader("Set-Cookie", cookie);
     }
 }
