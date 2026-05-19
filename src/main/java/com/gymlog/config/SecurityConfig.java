@@ -24,6 +24,8 @@ import java.util.List;
 public class SecurityConfig {
 
     private final JwtAuthFilter jwtAuthFilter;
+    private final RateLimitFilter rateLimitFilter;
+
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http)
@@ -45,7 +47,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/admin/**").hasRole("ADMIN")
                         .anyRequest().authenticated()
                 )
-                .addFilterBefore(jwtAuthFilter,
+                .addFilterBefore(rateLimitFilter,UsernamePasswordAuthenticationFilter.class)
+                .addFilterBefore(
+                        jwtAuthFilter,
                         UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
