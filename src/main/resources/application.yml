@@ -64,3 +64,12 @@ logging:
   level:
     org.springframework.web.client: DEBUG
     com.gymlog: DEBUG
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: health,info,metrics
+  endpoint:
+    health:
+      show-details: always
