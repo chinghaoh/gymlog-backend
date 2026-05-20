@@ -1,6 +1,8 @@
 package com.gymlog.ai.chat;
 
 import com.gymlog.ai.builder.AiPromptBuilder;
+import com.gymlog.ai.log.AiCoachResponse;
+import com.gymlog.ai.log.AiCoachResponseRepository;
 import com.gymlog.ai.parser.AiResponseParser;
 import com.gymlog.ai.creator.AiWorkoutCreator;
 import com.gymlog.ai.validator.AiWorkoutValidator;
@@ -41,6 +43,7 @@ public class AiChatService {
     private final AiResponseParser responseParser;
     private final AiWorkoutValidator workoutValidator;
     private final AiWorkoutCreator workoutCreator;
+    private final AiCoachResponseRepository aiCoachResponseRepository;
 
 
     public AiChatResponse generateWorkout(AiChatRequest request) {
@@ -105,6 +108,15 @@ public class AiChatService {
         workoutValidator.validate(plan, split, exercises, prs);
 
         Long workoutId = workoutCreator.create(plan, user, split);
+
+        AiCoachResponse log = AiCoachResponse.builder()
+                .user(user)
+                .workout(workoutRepository.findById(workoutId).orElseThrow())
+                .type("CHAT")
+                .prompt(prompt)
+                .response(rawResponse)
+                .build();
+        aiCoachResponseRepository.save(log);
 
         return new AiChatResponse(
                 "CREATE_WORKOUT",

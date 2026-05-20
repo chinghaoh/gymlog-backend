@@ -73,9 +73,11 @@ public class AiPromptBuilder {
         sb.append("5. Beginner defaults: compounds 20-40kg, dumbbells 8-12kg, isolation 5-10kg\n");
         sb.append("6. Intermediate defaults: compounds 60-80kg, dumbbells 15-25kg\n");
         sb.append("7. Advanced defaults: compounds 80kg+, dumbbells 25kg+\n");
-        sb.append("8. Include 4-6 exercises, 3-5 sets each, 6-12 reps\n");
+        sb.append("8. Include 4-6 exercises, exactly 3 sets each, 8-12 reps\n");
         sb.append("9. Prefer exercises NOT in the recently used list\n");
         sb.append("10. Never exceed PR weight x 1.10\n\n");
+        sb.append("IMPORTANT: Every exercise must have exactly 3 sets. No more, no less.\n\n");
+
 
         sb.append("Respond ONLY with this exact JSON structure:\n");
         sb.append("{\n");
@@ -84,6 +86,7 @@ public class AiPromptBuilder {
         sb.append("  \"splitCategory\": \"").append(split.name()).append("\",\n");
         sb.append("  \"reasoning\": \"...\",\n");
         sb.append("  \"exercises\": [\n");
+        sb.append("    {\"exerciseId\": 0, \"exerciseName\": \"...\", \"sets\": 3, \"reps\": 8, \"weight\": 0.0}\n");
         sb.append("    {\"exerciseId\": 0, \"exerciseName\": \"...\", \"sets\": 3, \"reps\": 8, \"weight\": 0.0}\n");
         sb.append("  ]\n");
         sb.append("}\n");
