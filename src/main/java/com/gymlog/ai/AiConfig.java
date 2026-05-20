@@ -1,5 +1,6 @@
 package com.gymlog.ai;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.ai.anthropic.AnthropicChatModel;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.context.annotation.Bean;
@@ -11,5 +12,10 @@ public class AiConfig {
     @Bean
     public ChatClient chatClient(AnthropicChatModel chatModel) {
         return ChatClient.builder(chatModel).build();
+    }
+
+    @Bean
+    public ObjectMapper objectMapper() {
+        return new ObjectMapper();
     }
 }

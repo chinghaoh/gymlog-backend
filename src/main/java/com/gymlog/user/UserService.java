@@ -73,6 +73,7 @@ public class UserService {
         dto.setRole(user.getRole());
         dto.setCreatedAt(user.getCreatedAt());
         dto.setUpdatedAt(user.getUpdatedAt());
+        dto.setFitnessLevel(user.getFitnessLevel());
         return dto;
     }
 

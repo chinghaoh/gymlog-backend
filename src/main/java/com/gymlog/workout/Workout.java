@@ -38,6 +38,9 @@ public class Workout {
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
 
+    @Column(nullable = false)
+    private Boolean aiGenerated = false;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();

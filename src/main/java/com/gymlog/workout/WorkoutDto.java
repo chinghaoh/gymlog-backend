@@ -28,4 +28,5 @@ public class WorkoutDto {
     private String notes;
     private Integer totalSets;
     private LocalDateTime createdAt;
+    private Boolean aiGenerated;
 }

@@ -97,7 +97,7 @@ public class WorkoutService {
         dto.setNotes(workout.getNotes());
         dto.setCreatedAt(workout.getCreatedAt());
         dto.setTotalSets(workoutSetRepository.countByWorkoutId(workout.getId()));
-
+        dto.setAiGenerated(workout.getAiGenerated());
         return dto;
     }
 }

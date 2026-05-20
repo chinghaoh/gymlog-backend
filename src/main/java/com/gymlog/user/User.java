@@ -50,6 +50,9 @@ public class User {
 
     private LocalDateTime resetTokenExpiry;
 
+    @Column(length = 20)
+    private String fitnessLevel;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();

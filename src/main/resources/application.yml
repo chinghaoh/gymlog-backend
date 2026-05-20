@@ -29,7 +29,7 @@ spring:
       chat:
         options:
           model: claude-haiku-4-5-20251001
-          max-tokens: 500
+          max-tokens: 1500
 
   mail:
     host: smtp.gmail.com

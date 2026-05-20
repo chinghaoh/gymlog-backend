@@ -15,4 +15,6 @@ public interface PersonalRecordRepository extends JpaRepository<PersonalRecord, 
 
     List<PersonalRecord> findByUserIdAndExerciseIdOrderByAchievedAtDesc(
             Long userId, Long exerciseId);
+
+
 }

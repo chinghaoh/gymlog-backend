@@ -9,6 +9,7 @@ import java.util.List;
 @Repository
 public interface WorkoutRepository extends JpaRepository<Workout, Long> {
     List<Workout> findByUserIdOrderByCreatedAtDesc(Long userId);
+    List<Workout> findTop3ByUserIdAndSplitCategoryOrderByCreatedAtDesc(Long userId, SplitCategory splitCategory);
     List<Workout> findByUserIdAndCreatedAtBetween(
             Long userId,
             LocalDateTime start,

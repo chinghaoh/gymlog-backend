@@ -28,5 +28,5 @@ public interface ExerciseRepository extends JpaRepository<Exercise,Long>{
             @Param("difficulty") String difficulty,
             @Param("name") String name
     );
-
+    List<Exercise> findByCategoryInAndIsActiveTrue(List<String> categories);
 }
