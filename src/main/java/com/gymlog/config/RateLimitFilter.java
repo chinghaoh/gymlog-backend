@@ -45,7 +45,7 @@ public class RateLimitFilter extends OncePerRequestFilter {
         if (uri.equals("/api/auth/login")) capacity = 5;
         else if (uri.equals("/api/auth/register")) capacity = 3;
         else if (uri.equals("/api/auth/forgot-password")) capacity = 3;
-
+        else if (uri.equals("/api/ai/chat")) capacity = 5;
         if (capacity > 0) {
             String key = ip + ":" + uri;
             Bucket bucket = getBucket(key, capacity);
