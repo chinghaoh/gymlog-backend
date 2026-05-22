@@ -86,6 +86,13 @@ public class WorkoutService {
                 .collect(Collectors.toList());
     }
 
+    @Transactional
+    public void updateDuration(Long id, Integer durationMinutes) {
+        Workout workout = findWorkoutOrThrow(id);
+        workout.setDurationMinutes(durationMinutes);
+        workoutRepository.save(workout);
+    }
+
     private WorkoutDto mapToDto(Workout workout) {
         WorkoutDto dto = new WorkoutDto();
         dto.setId(workout.getId());

@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/workouts")
@@ -51,5 +52,13 @@ public class WorkoutController {
             @RequestParam String start,
             @RequestParam String end) {
         return ResponseEntity.ok(workoutService.getWorkoutsByRange(userId, start, end));
+    }
+
+    @PatchMapping("/{id}/duration")
+    public ResponseEntity<Void> updateDuration(
+            @PathVariable Long id,
+            @RequestBody Map<String, Integer> body) {
+        workoutService.updateDuration(id, body.get("durationMinutes"));
+        return ResponseEntity.ok().build();
     }
 }
