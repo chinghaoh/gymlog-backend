@@ -5,6 +5,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/users")
@@ -48,6 +49,15 @@ public class UserController {
             @RequestBody ChangePasswordRequest request) {
         userService.changePassword(id, request);
         return ResponseEntity.noContent().build();
+    }
+
+    @PatchMapping("/{id}/fitness-level")
+    public ResponseEntity<Void> updateFitnessLevel(
+            @PathVariable Long id,
+            @RequestBody Map<String, String> body) {
+        System.out.println("updateFitnessLevel called for user: " + id + " with level: " + body.get("fitnessLevel"));
+        userService.updateFitnessLevel(id, body.get("fitnessLevel"));
+        return ResponseEntity.ok().build();
     }
 
 }

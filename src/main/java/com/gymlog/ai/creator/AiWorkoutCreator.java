@@ -25,13 +25,19 @@ public class AiWorkoutCreator {
 
     public Long create(JsonNode plan, User user, SplitCategory split) {
 
+        int totalSets = 0;
+        for (JsonNode ex : plan.get("exercises")) {
+            totalSets += ex.get("sets").asInt();
+        }
+        int estimatedDuration = totalSets * 3;
+
         Workout workout = Workout.builder()
                 .user(user)
                 .name(plan.get("workoutName").asText())
                 .splitCategory(split)
                 .aiGenerated(true)
                 .notes(plan.get("reasoning").asText())
-                .createdAt(LocalDateTime.now())
+                .durationMinutes(estimatedDuration)
                 .build();
 
         workout = workoutRepository.save(workout);

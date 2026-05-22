@@ -96,4 +96,13 @@ public class UserService {
                         HttpStatus.NOT_FOUND, "User not found with email: " + email));
         return mapToDto(user);
     }
+
+    @Transactional
+    public void updateFitnessLevel(Long id, String fitnessLevel) {
+        User user = userRepository.findById(id)
+                .orElseThrow(() -> new AppException(
+                        HttpStatus.NOT_FOUND, "User not found"));
+        user.setFitnessLevel(fitnessLevel);
+        userRepository.save(user);
+    }
 }
