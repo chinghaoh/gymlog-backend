@@ -35,6 +35,11 @@ public interface WorkoutSetRepository extends JpaRepository<WorkoutSet, Long> {
             @Param("exerciseId") Long exerciseId
     );
 
+    @Query("SELECT ws FROM WorkoutSet ws " +
+            "WHERE ws.workout.id = :workoutId " +
+            "ORDER BY ws.exercise.id ASC, ws.setNumber ASC")
+    List<WorkoutSet> findByWorkoutIdOrdered(@Param("workoutId") Long workoutId);
+
     int countByWorkoutId(Long workoutId);
 
 }

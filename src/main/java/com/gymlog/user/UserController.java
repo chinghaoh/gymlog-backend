@@ -54,9 +54,8 @@ public class UserController {
     @PatchMapping("/{id}/fitness-level")
     public ResponseEntity<Void> updateFitnessLevel(
             @PathVariable Long id,
-            @RequestBody Map<String, String> body) {
-        System.out.println("updateFitnessLevel called for user: " + id + " with level: " + body.get("fitnessLevel"));
-        userService.updateFitnessLevel(id, body.get("fitnessLevel"));
+            @RequestBody UpdateFitnessLevelRequest request) {
+        userService.updateFitnessLevel(id, request.getFitnessLevel());
         return ResponseEntity.ok().build();
     }
 

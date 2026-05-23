@@ -57,8 +57,8 @@ public class WorkoutController {
     @PatchMapping("/{id}/duration")
     public ResponseEntity<Void> updateDuration(
             @PathVariable Long id,
-            @RequestBody Map<String, Integer> body) {
-        workoutService.updateDuration(id, body.get("durationMinutes"));
+            @RequestBody UpdateDurationRequest request) {
+        workoutService.updateDuration(id, request.getDurationMinutes());
         return ResponseEntity.ok().build();
     }
 }

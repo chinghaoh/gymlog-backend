@@ -38,11 +38,9 @@ public class WorkoutSetService {
         return dto;
     }
 
-
-
     @Transactional(readOnly = true)
     public List<WorkoutSetDto> getSetsByWorkoutId(Long workoutId) {
-        return workoutSetRepository.findByWorkoutIdOrderBySetNumberAsc(workoutId)
+        return workoutSetRepository.findByWorkoutIdOrdered(workoutId)
                 .stream()
                 .map(this::mapToDto)
                 .collect(Collectors.toList());
