@@ -4,6 +4,8 @@ import com.gymlog.set.WorkoutSet;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import java.util.Comparator;
+
 
 import java.util.List;
 import java.util.Optional;
@@ -30,22 +32,11 @@ public class PersonalRecordService {
     }
 
     @Transactional
-    private boolean isNewPersonalRecord(WorkoutSet set, Optional<PersonalRecord> currentPr){
+    private boolean isNewPersonalRecord(WorkoutSet set, Optional<PersonalRecord> currentPr) {
         if (currentPr.isEmpty()) {
             return true;
         }
-
-        PersonalRecord pr = currentPr.get();
-
-        if (set.getWeight().compareTo(pr.getWeight()) > 0) {
-            return true;
-        }
-
-        if (set.getWeight().compareTo(pr.getWeight()) == 0
-                && set.getReps() > pr.getReps()) {
-            return true;
-        }
-        return false;
+        return set.getWeight().compareTo(currentPr.get().getWeight()) > 0;
     }
 
     private void savePersonalRecord(WorkoutSet set,

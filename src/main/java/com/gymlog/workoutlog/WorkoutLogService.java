@@ -1,6 +1,8 @@
 package com.gymlog.workoutlog;
 
 import com.gymlog.common.AppException;
+import com.gymlog.record.PersonalRecordService;
+import com.gymlog.set.WorkoutSetRepository;
 import com.gymlog.user.User;
 import com.gymlog.user.UserRepository;
 import com.gymlog.workout.Workout;
@@ -12,6 +14,11 @@ import org.springframework.transaction.annotation.Transactional;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
+import com.gymlog.set.WorkoutSet;
+import java.util.Map;
+import java.util.Optional;
+import java.util.Comparator;
+
 
 @Service
 @RequiredArgsConstructor
@@ -20,6 +27,9 @@ public class WorkoutLogService {
     private final WorkoutLogRepository workoutLogRepository;
     private final UserRepository userRepository;
     private final WorkoutRepository workoutRepository;
+    private final WorkoutSetRepository workoutSetRepository;
+    private final PersonalRecordService personalRecordService;
+
 
     @Transactional(readOnly = true)
     public List<WorkoutLogDto> getLogsByUserId(Long userId) {
@@ -55,7 +65,21 @@ public class WorkoutLogService {
                 .notes(dto.getNotes())
                 .build();
 
-        return mapToDto(workoutLogRepository.save(log));
+        WorkoutLog saved = workoutLogRepository.save(log);
+
+        List<WorkoutSet> sets = workoutSetRepository.findByWorkoutIdOrdered(workout.getId());
+
+        Map<Long, Optional<WorkoutSet>> highestPerExercise = sets.stream()
+                .collect(Collectors.groupingBy(
+                        s -> s.getExercise().getId(),
+                        Collectors.maxBy(Comparator.comparing(WorkoutSet::getWeight))
+                ));
+
+        for (Optional<WorkoutSet> optSet : highestPerExercise.values()) {
+            optSet.ifPresent(personalRecordService::checkForPersonalRecord);
+        }
+
+        return mapToDto(saved);
     }
 
     @Transactional

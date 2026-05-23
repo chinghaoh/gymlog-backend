@@ -66,9 +66,6 @@ public class WorkoutSetService {
                 .build();
 
         WorkoutSet saved = workoutSetRepository.save(workoutSet);
-
-        personalRecordService.checkForPersonalRecord(saved);
-
         statsService.updateStats(saved);
 
         return mapToDto(saved);
@@ -85,7 +82,6 @@ public class WorkoutSetService {
         existing.setNotes(dto.getNotes());
 
         WorkoutSet saved = workoutSetRepository.save(existing);
-        personalRecordService.checkForPersonalRecord(saved);
         statsService.updateStats(saved);
 
         return mapToDto(saved);
