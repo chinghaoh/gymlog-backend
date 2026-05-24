@@ -4,6 +4,9 @@ import com.gymlog.set.WorkoutSet;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.Comparator;
 
 
@@ -40,14 +43,18 @@ public class PersonalRecordService {
     }
 
     private void savePersonalRecord(WorkoutSet set,
-                                    Optional<PersonalRecord> currentPr) {
+                                    Optional<PersonalRecord> currentPr,
+                                    LocalDate logDate) {
+        LocalDateTime achievedAt = logDate != null
+                ? logDate.atStartOfDay()
+                : LocalDateTime.now();
 
         if (currentPr.isPresent()) {
             PersonalRecord pr = currentPr.get();
             pr.setWeight(set.getWeight());
             pr.setReps(set.getReps());
             pr.setWorkout(set.getWorkout());
-            pr.setAchievedAt(java.time.LocalDateTime.now());
+            pr.setAchievedAt(achievedAt);
             personalRecordRepository.save(pr);
         } else {
             PersonalRecord pr = PersonalRecord.builder()
@@ -56,14 +63,14 @@ public class PersonalRecordService {
                     .workout(set.getWorkout())
                     .weight(set.getWeight())
                     .reps(set.getReps())
+                    .achievedAt(achievedAt)
                     .build();
             personalRecordRepository.save(pr);
         }
     }
 
     @Transactional
-    public boolean checkForPersonalRecord(WorkoutSet savedSet) {
-
+    public boolean checkForPersonalRecord(WorkoutSet savedSet, LocalDate logDate) {
         Long userId = savedSet.getWorkout().getUser().getId();
         Long exerciseId = savedSet.getExercise().getId();
 
@@ -73,7 +80,7 @@ public class PersonalRecordService {
         boolean isNewPr = isNewPersonalRecord(savedSet, currentPr);
 
         if (isNewPr) {
-            savePersonalRecord(savedSet, currentPr);
+            savePersonalRecord(savedSet, currentPr, logDate);
             return true;
         }
         return false;

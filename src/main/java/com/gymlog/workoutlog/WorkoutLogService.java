@@ -89,7 +89,7 @@ public class WorkoutLogService {
                 ));
 
         for (Optional<WorkoutSet> optSet : highestPerExercise.values()) {
-            optSet.ifPresent(personalRecordService::checkForPersonalRecord);
+            optSet.ifPresent(set -> personalRecordService.checkForPersonalRecord(set, dto.getDate()));
         }
 
         return mapToDto(saved);
