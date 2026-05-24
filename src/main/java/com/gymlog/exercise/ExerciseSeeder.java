@@ -65,32 +65,33 @@ public class ExerciseSeeder {
         ObjectMapper mapper = new ObjectMapper();
 
         for (String bodyPart : BODY_PARTS) {
+            for (int offset = 0; offset <= 10; offset += 10) {
+                String url = "https://api.workoutxapp.com/v1/exercises/bodyPart/"
+                        + bodyPart.replace(" ", "%20")
+                        + "?limit=10&offset=" + offset;
 
-            String url = "https://api.workoutxapp.com/v1/exercises/bodyPart/"
-                    + bodyPart.replace(" ", "%20");
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(url))
+                        .header("X-WorkoutX-Key", apiKey)
+                        .GET()
+                        .build();
 
-            HttpRequest request = HttpRequest.newBuilder()
-                    .uri(URI.create(url))
-                    .header("X-WorkoutX-Key", apiKey)
-                    .GET()
-                    .build();
+                HttpResponse<String> response = client.send(
+                        request, HttpResponse.BodyHandlers.ofString());
 
-            HttpResponse<String> response = client.send(
-                    request, HttpResponse.BodyHandlers.ofString());
+                WorkoutXResponse wrapper = mapper.readValue(
+                        response.body(), WorkoutXResponse.class);
 
-            WorkoutXResponse wrapper = mapper.readValue(
-                    response.body(), WorkoutXResponse.class);
+                if (wrapper.data == null || wrapper.data.isEmpty()) break;
 
-            if (wrapper.data == null) {
-                continue;
-            }
-
-            for (WorkoutXExercise ex : wrapper.data) {
-                if (!exerciseRepository.existsByNameIgnoreCase(ex.name)) {
-                    exerciseRepository.save(mapToEntity(ex));
+                for (WorkoutXExercise ex : wrapper.data) {
+                    if (!exerciseRepository.existsByNameIgnoreCase(ex.name)) {
+                        exerciseRepository.save(mapToEntity(ex));
+                    }
                 }
+
+                Thread.sleep(300);
             }
-            Thread.sleep(300);
         }
     }
 
@@ -109,13 +110,17 @@ public class ExerciseSeeder {
                                 ? String.join(", ", ex.secondaryMuscles)
                                 : null)
                 .gifUrl(ex.gifUrl)
-                .description(ex.description)  // already formatted string
+                .description(ex.description)
                 .difficulty(ex.difficulty != null
                         ? ex.difficulty.toUpperCase()
                         : null)
                 .exerciseType(ex.category)
+                .instructions(ex.instructions != null
+                        ? String.join("\n", ex.instructions)
+                        : null)
                 .isSeeded(true)
                 .isActive(true)
+                .aiCreated(false)
                 .build();
     }
 }

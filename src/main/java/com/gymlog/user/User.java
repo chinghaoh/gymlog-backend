@@ -53,6 +53,9 @@ public class User {
     @Column(length = 20)
     private String fitnessLevel;
 
+    @Column(nullable = false)
+    private Boolean isDemo = false;
+
     @PrePersist
     protected void onCreate() {
         createdAt = LocalDateTime.now();

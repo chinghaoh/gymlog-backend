@@ -51,4 +51,7 @@ public class Exercise {
 
     @Column(nullable = false)
     private Boolean aiCreated = false;
+
+    @Column(columnDefinition = "TEXT")
+    private String instructions;
 }

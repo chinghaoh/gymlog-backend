@@ -20,7 +20,8 @@ public interface ExerciseRepository extends JpaRepository<Exercise,Long>{
             "(:category IS NULL OR category = :category) AND " +
             "(:equipment IS NULL OR equipment = :equipment) AND " +
             "(:difficulty IS NULL OR difficulty = :difficulty) AND " +
-            "(:name IS NULL OR LOWER(name) LIKE LOWER(CONCAT('%', :name, '%')))",
+            "(:name IS NULL OR LOWER(name) LIKE LOWER(CONCAT('%', :name, '%'))) " +
+            "ORDER BY name ASC",
             nativeQuery = true)
     List<Exercise> findByFilters(
             @Param("category") String category,
@@ -28,5 +29,6 @@ public interface ExerciseRepository extends JpaRepository<Exercise,Long>{
             @Param("difficulty") String difficulty,
             @Param("name") String name
     );
+
     List<Exercise> findByCategoryInAndIsActiveTrue(List<String> categories);
 }
