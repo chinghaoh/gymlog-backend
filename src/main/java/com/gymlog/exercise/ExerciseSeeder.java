@@ -87,6 +87,13 @@ public class ExerciseSeeder {
                 for (WorkoutXExercise ex : wrapper.data) {
                     if (!exerciseRepository.existsByNameIgnoreCase(ex.name)) {
                         exerciseRepository.save(mapToEntity(ex));
+                    } else {
+                        exerciseRepository.findByNameIgnoreCase(ex.name).ifPresent(existing -> {
+                            existing.setInstructions(ex.instructions != null
+                                    ? String.join("\n", ex.instructions)
+                                    : null);
+                            exerciseRepository.save(existing);
+                        });
                     }
                 }
 

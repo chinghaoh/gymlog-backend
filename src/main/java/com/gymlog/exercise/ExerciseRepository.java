@@ -7,6 +7,7 @@ import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 public interface ExerciseRepository extends JpaRepository<Exercise,Long>{
@@ -31,4 +32,6 @@ public interface ExerciseRepository extends JpaRepository<Exercise,Long>{
     );
 
     List<Exercise> findByCategoryInAndIsActiveTrue(List<String> categories);
+    Optional<Exercise> findByNameIgnoreCase(String name);
+
 }

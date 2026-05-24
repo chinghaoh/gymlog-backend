@@ -29,6 +29,7 @@ public class ExerciseService {
         dto.setIsSeeded(exercise.getIsSeeded());
         dto.setIsActive(exercise.getIsActive());
         dto.setAiCreated(exercise.getAiCreated());
+        dto.setInstructions(exercise.getInstructions());
         return dto;
     }
 
@@ -59,6 +60,7 @@ public class ExerciseService {
                 .targetMuscle(dto.getTargetMuscle())
                 .secondaryMuscles(dto.getSecondaryMuscles())
                 .gifUrl(dto.getGifUrl())
+                .instructions(dto.getInstructions())
                 .isSeeded(false)
                 .isActive(true)
                 .build();

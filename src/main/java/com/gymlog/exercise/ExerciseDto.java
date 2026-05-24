@@ -20,5 +20,6 @@ public class ExerciseDto {
     private Boolean isSeeded;
     private Boolean isActive;
     private Boolean aiCreated;
+    private String instructions;
 
 }
