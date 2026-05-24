@@ -46,6 +46,7 @@ public class WorkoutService {
                 .splitCategory(dto.getSplitCategory())
                 .durationMinutes(dto.getDurationMinutes())
                 .notes(dto.getNotes())
+                .aiGenerated(false)
                 .build();
 
         return mapToDto(workoutRepository.save(workout));
