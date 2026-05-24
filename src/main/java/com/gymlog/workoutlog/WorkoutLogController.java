@@ -31,4 +31,18 @@ public class WorkoutLogController {
         workoutLogService.deleteLog(id);
         return ResponseEntity.noContent().build();
     }
+
+    @GetMapping("/sets")
+    public ResponseEntity<List<WorkoutLogSetDto>> getLogSetsByUserAndExercise(
+            @RequestParam Long userId,
+            @RequestParam Long exerciseId) {
+        return ResponseEntity.ok(workoutLogService.getLogSetsByUserAndExercise(userId, exerciseId));
+    }
+
+    @GetMapping("/sets/history")
+    public ResponseEntity<List<WorkoutLogSetDto>> getLogSetsHistory(
+            @RequestParam Long userId,
+            @RequestParam Long exerciseId) {
+        return ResponseEntity.ok(workoutLogService.getLogSetsByUserAndExerciseDesc(userId, exerciseId));
+    }
 }

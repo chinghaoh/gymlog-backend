@@ -29,6 +29,7 @@ public class WorkoutLogService {
     private final WorkoutRepository workoutRepository;
     private final WorkoutSetRepository workoutSetRepository;
     private final PersonalRecordService personalRecordService;
+    private final WorkoutLogSetRepository workoutLogSetRepository;
 
 
     @Transactional(readOnly = true)
@@ -67,8 +68,20 @@ public class WorkoutLogService {
 
         WorkoutLog saved = workoutLogRepository.save(log);
 
+        // Copy WorkoutSets into WorkoutLogSets to snapshot weights
         List<WorkoutSet> sets = workoutSetRepository.findByWorkoutIdOrdered(workout.getId());
+        for (WorkoutSet set : sets) {
+            WorkoutLogSet logSet = WorkoutLogSet.builder()
+                    .workoutLog(saved)
+                    .exercise(set.getExercise())
+                    .setNumber(set.getSetNumber())
+                    .reps(set.getReps())
+                    .weight(set.getWeight())
+                    .build();
+            workoutLogSetRepository.save(logSet);
+        }
 
+        // PR detection — highest weight per exercise
         Map<Long, Optional<WorkoutSet>> highestPerExercise = sets.stream()
                 .collect(Collectors.groupingBy(
                         s -> s.getExercise().getId(),
@@ -103,6 +116,34 @@ public class WorkoutLogService {
         dto.setNotes(log.getNotes());
         dto.setCreatedAt(log.getCreatedAt());
 
+        return dto;
+    }
+
+    @Transactional(readOnly = true)
+    public List<WorkoutLogSetDto> getLogSetsByUserAndExercise(Long userId, Long exerciseId) {
+        return workoutLogSetRepository.findByUserIdAndExerciseIdOrderByDate(userId, exerciseId)
+                .stream()
+                .map(this::mapLogSetToDto)
+                .collect(Collectors.toList());
+    }
+
+    @Transactional(readOnly = true)
+    public List<WorkoutLogSetDto> getLogSetsByUserAndExerciseDesc(Long userId, Long exerciseId) {
+        return workoutLogSetRepository.findByUserIdAndExerciseIdOrderByDateDesc(userId, exerciseId)
+                .stream()
+                .map(this::mapLogSetToDto)
+                .collect(Collectors.toList());
+    }
+
+    private WorkoutLogSetDto mapLogSetToDto(WorkoutLogSet logSet) {
+        WorkoutLogSetDto dto = new WorkoutLogSetDto();
+        dto.setId(logSet.getId());
+        dto.setExerciseId(logSet.getExercise().getId());
+        dto.setExerciseName(logSet.getExercise().getName());
+        dto.setSetNumber(logSet.getSetNumber());
+        dto.setReps(logSet.getReps());
+        dto.setWeight(logSet.getWeight());
+        dto.setLogDate(logSet.getWorkoutLog().getDate());
         return dto;
     }
 }
