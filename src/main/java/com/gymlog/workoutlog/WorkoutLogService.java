@@ -146,4 +146,14 @@ public class WorkoutLogService {
         dto.setLogDate(logSet.getWorkoutLog().getDate());
         return dto;
     }
+
+    public List<WorkoutLogSetDto> getSetsByLogId(Long logId) {
+        if (!workoutLogRepository.existsById(logId)) {
+            throw new AppException(HttpStatus.NOT_FOUND, "Log not found with id: " + logId);
+        }
+        return workoutLogSetRepository.findByWorkoutLogId(logId)
+                .stream()
+                .map(this::mapLogSetToDto)
+                .collect(Collectors.toList());
+    }
 }

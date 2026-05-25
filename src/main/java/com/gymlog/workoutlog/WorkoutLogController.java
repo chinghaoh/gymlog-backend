@@ -46,4 +46,9 @@ public class WorkoutLogController {
             @RequestParam Long exerciseId) {
         return ResponseEntity.ok(workoutLogService.getLogSetsByUserAndExerciseDesc(userId, exerciseId));
     }
+
+    @GetMapping("/{logId}/sets")
+    public ResponseEntity<List<WorkoutLogSetDto>> getSetsByLog(@PathVariable Long logId) {
+        return ResponseEntity.ok(workoutLogService.getSetsByLogId(logId));
+    }
 }

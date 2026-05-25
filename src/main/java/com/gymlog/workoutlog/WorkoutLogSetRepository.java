@@ -27,4 +27,11 @@ public interface WorkoutLogSetRepository extends JpaRepository<WorkoutLogSet, Lo
     List<WorkoutLogSet> findByUserIdAndExerciseIdOrderByDateDesc(
             @Param("userId") Long userId,
             @Param("exerciseId") Long exerciseId);
+
+
+    @Query("SELECT wls FROM WorkoutLogSet wls " +
+            "JOIN wls.workoutLog wl " +
+            "WHERE wl.id = :logId " +
+            "ORDER BY wls.exercise.name ASC, wls.setNumber ASC")
+    List<WorkoutLogSet> findByWorkoutLogId(@Param("logId") Long logId);
 }
