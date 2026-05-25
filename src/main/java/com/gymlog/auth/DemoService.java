@@ -35,7 +35,6 @@ public class DemoService {
                 .role(Role.USER)
                 .isVerified(true)
                 .isDemo(true)
-                .fitnessLevel("BEGINNER")
                 .build();
 
         User saved = userRepository.save(user);

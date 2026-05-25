@@ -48,6 +48,12 @@ public class UserService {
     @Transactional
     public UserDto updateUser(Long id, UserDto dto) {
         User user = findUserOrThrow(id);
+
+        if (user.getIsDemo()) {
+            throw new AppException(HttpStatus.FORBIDDEN,
+                    "Demo accounts cannot be modified.");
+        }
+
         user.setName(dto.getName());
         user.setEmail(dto.getEmail());
         return mapToDto(userRepository.save(user));
@@ -74,12 +80,18 @@ public class UserService {
         dto.setCreatedAt(user.getCreatedAt());
         dto.setUpdatedAt(user.getUpdatedAt());
         dto.setFitnessLevel(user.getFitnessLevel());
+        dto.setIsDemo(user.getIsDemo());
         return dto;
     }
 
     @Transactional
     public void changePassword(Long id, ChangePasswordRequest request) {
         User user = findUserOrThrow(id);
+
+        if (user.getIsDemo()) {
+            throw new AppException(HttpStatus.FORBIDDEN,
+                    "Demo accounts cannot be modified.");
+        }
 
         if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
             throw new AppException(HttpStatus.UNAUTHORIZED, "Current password is incorrect");
