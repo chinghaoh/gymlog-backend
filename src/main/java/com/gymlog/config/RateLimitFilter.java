@@ -49,8 +49,10 @@ public class RateLimitFilter extends OncePerRequestFilter {
             case "/api/auth/register"        -> { capacity = 3;  duration = Duration.ofMinutes(1); }
             case "/api/auth/forgot-password" -> { capacity = 3;  duration = Duration.ofMinutes(10); }
             case "/api/auth/reset-password"  -> { capacity = 5;  duration = Duration.ofMinutes(10); }
+            case "/api/auth/demo"            -> { capacity = 3; duration = Duration.ofMinutes(10); }
             case "/api/auth/verify"          -> { capacity = 5;  duration = Duration.ofMinutes(10); }
             case "/api/ai/chat"              -> { capacity = 10; duration = Duration.ofHours(1); }
+
             default -> {
                 if (uri.startsWith("/api/")) {
                     capacity = 100;

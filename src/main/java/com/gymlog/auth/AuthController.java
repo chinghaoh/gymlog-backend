@@ -20,6 +20,8 @@ public class AuthController {
 
     private final AuthService authService;
     private final UserService userService;
+    private final DemoService demoService;
+
 
     @Value("${app.cookie.secure}")
     private boolean secureCookie;
@@ -58,6 +60,13 @@ public class AuthController {
         if (secureCookie) cookie += "; Secure";
         response.addHeader("Set-Cookie", cookie);
         return ResponseEntity.ok().build();
+    }
+
+    @PostMapping("/demo")
+    public ResponseEntity<AuthResponse> demo(HttpServletResponse response) {
+        AuthResponse auth = demoService.createDemoUser();
+        setJwtCookie(response, auth.getToken());
+        return ResponseEntity.status(HttpStatus.CREATED).body(auth);
     }
 
     @GetMapping("/verify")
