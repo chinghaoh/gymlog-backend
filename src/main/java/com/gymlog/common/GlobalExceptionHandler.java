@@ -2,11 +2,15 @@ package com.gymlog.common;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.context.support.DefaultMessageSourceResolvable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
-import org.springframework.web.bind.MethodArgumentNotValidException;
+
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Slf4j
@@ -49,17 +53,27 @@ public class GlobalExceptionHandler {
             MethodArgumentNotValidException ex,
             HttpServletRequest request) {
 
-        String message = ex.getBindingResult()
+        // map of field → first error message for that field
+        Map<String, String> fieldErrors = ex.getBindingResult()
                 .getFieldErrors()
                 .stream()
-                .map(error -> error.getField() + ": " + error.getDefaultMessage())
+                .collect(Collectors.toMap(
+                        FieldError::getField,
+                        DefaultMessageSourceResolvable::getDefaultMessage,
+                        (existing, replacement) -> existing // keep first error per field
+                ));
+
+        // readable summary string
+        String message = fieldErrors.entrySet().stream()
+                .map(e -> e.getKey() + ": " + e.getValue())
                 .collect(Collectors.joining(", "));
 
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.BAD_REQUEST.value(),
                 "Validation Failed",
                 message,
-                request.getRequestURI()
+                request.getRequestURI(),
+                fieldErrors
         );
 
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(error);

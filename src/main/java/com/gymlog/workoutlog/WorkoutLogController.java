@@ -1,5 +1,6 @@
 package com.gymlog.workoutlog;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,7 +22,7 @@ public class WorkoutLogController {
     @PostMapping
     public ResponseEntity<WorkoutLogDto> createLog(
             @RequestParam Long userId,
-            @RequestBody WorkoutLogDto dto) {
+            @Valid @RequestBody WorkoutLogDto dto) {
         return ResponseEntity.status(HttpStatus.CREATED)
                 .body(workoutLogService.createLog(userId, dto));
     }
