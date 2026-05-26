@@ -41,5 +41,6 @@ jobs:
           script: |
             pkill java || true
             sleep 2
+            source ~/.env
             java -jar ~/gymlog-0.0.1-SNAPSHOT.jar > ~/app.log 2>&1 &
             echo "Backend deployed successfully"
