@@ -44,6 +44,7 @@ public class AuthService {
                 .role(Role.USER)
                 .isVerified(false)
                 .verificationToken(verificationToken)
+                .isDemo(false)
                 .verificationTokenExpiry(LocalDateTime.now().plusHours(24))
                 .build();
 

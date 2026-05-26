@@ -41,6 +41,7 @@ public class UserService {
                 .email(dto.getEmail())
                 .password(dto.getPassword())
                 .role(dto.getRole() != null ? dto.getRole() : Role.USER)
+                .isDemo(false)
                 .build();
         return mapToDto(userRepository.save(user));
     }

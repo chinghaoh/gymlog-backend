@@ -22,6 +22,9 @@ public class EmailService {
     @Value("${spring.mail.username}")
     private String from;
 
+    @Value("${app.frontend-url:http://localhost:5173}")
+    private String frontendUrl;
+
     public void sendVerificationEmail(String to, String token) {
         MimeMessage message = mailSender.createMimeMessage();
         log.info("EmailService received token: {}", token);
@@ -32,7 +35,7 @@ public class EmailService {
             helper.setSubject("Verify your GymLog account");
             helper.setText(
                     "<p>Click the link below to verify your account:</p>" +
-                            "<a href='http://localhost:5173/verify?token=" +
+                            "<a href='" + frontendUrl + "/verify?token=" +
                             URLEncoder.encode(token, StandardCharsets.UTF_8) +
                             "'>Verify my account</a>" +
                             "<p>This link expires in 24 hours.</p>",
@@ -53,7 +56,7 @@ public class EmailService {
             helper.setSubject("Reset your GymLog password");
             helper.setText(
                     "<p>Click the link below to reset your password:</p>" +
-                            "<a href='http://localhost:5173/reset-password?token=" +
+                            "<a href='" + frontendUrl + "/reset-password?token=" +
                             URLEncoder.encode(token, StandardCharsets.UTF_8) +
                             "'>Reset my password</a>" +
                             "<p>This link expires in 30 minutes.</p>",
@@ -66,6 +69,4 @@ public class EmailService {
             throw new RuntimeException("Failed to send email", e);
         }
     }
-
-
 }
