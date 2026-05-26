@@ -34,7 +34,10 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleGenericException(
+            Exception ex,
             HttpServletRequest request) {
+
+        log.error("Unhandled exception on {}: {}", request.getRequestURI(), ex.getMessage(), ex); // ← add this
 
         ErrorResponse error = new ErrorResponse(
                 HttpStatus.INTERNAL_SERVER_ERROR.value(),

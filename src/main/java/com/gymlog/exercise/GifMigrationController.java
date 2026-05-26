@@ -90,7 +90,7 @@ public class GifMigrationController {
                 Thread.sleep(300);
 
             } catch (Exception e) {
-                log.error("Error migrating GIF for {}: {}", exercise.getName(), e.getMessage());
+                log.error("Error migrating GIF for {}: ", exercise.getName(), e);
                 failed++;
             }
         }
