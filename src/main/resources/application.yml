@@ -87,5 +87,7 @@ management:
       show-details: always
 
 app:
+  cors:
+    allowed-origins: ${CORS_ORIGINS:http://localhost:5173}
   cookie:
-    secure: false
+    secure: ${APP_COOKIE_SECURE:false}
