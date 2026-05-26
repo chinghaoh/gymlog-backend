@@ -92,3 +92,11 @@ app:
     allowed-origins: ${CORS_ORIGINS:http://localhost:5173}
   cookie:
     secure: ${APP_COOKIE_SECURE:false}
+  cloudfront-url: ${CLOUDFRONT_URL:https://d29bpvkdmyn1cv.cloudfront.net}
+
+
+aws:
+  access-key-id: ${AWS_ACCESS_KEY_ID}
+  secret-access-key: ${AWS_SECRET_ACCESS_KEY}
+  s3:
+    bucket: gymlog-frontend
