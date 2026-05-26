@@ -54,18 +54,11 @@ public class GifMigrationController {
             try {
                 String gifUrl = exercise.getGifUrl();
                 String filename = gifUrl.substring(gifUrl.lastIndexOf('/') + 1);
-
                 String downloadUrl = gifUrl + "?api-key=" + apiKey;
-                HttpRequest request = HttpRequest.newBuilder()
-                        .uri(URI.create(downloadUrl))
-                        .GET()
-                        .build();
 
-                HttpResponse<byte[]> response = httpClient.send(
-                        request, HttpResponse.BodyHandlers.ofByteArray());
+                byte[] gifBytes = downloadWithRetry(httpClient, downloadUrl, exercise.getName());
 
-                if (response.statusCode() != 200) {
-                    log.warn("Failed to download GIF for {}: status {}", exercise.getName(), response.statusCode());
+                if (gifBytes == null) {
                     failed++;
                     continue;
                 }
@@ -77,7 +70,7 @@ public class GifMigrationController {
                                 .key(s3Key)
                                 .contentType("image/gif")
                                 .build(),
-                        RequestBody.fromBytes(response.body())
+                        RequestBody.fromBytes(gifBytes)
                 );
 
                 exercise.setGifUrl(cloudfrontUrl + "/" + s3Key);
@@ -86,8 +79,7 @@ public class GifMigrationController {
                 success++;
                 log.info("Migrated {} → {}", exercise.getName(), s3Key);
 
-                // rate limit — 300ms between requests
-                Thread.sleep(300);
+                Thread.sleep(1000); // 1s base delay between requests
 
             } catch (Exception e) {
                 log.error("Error migrating GIF for {}: ", exercise.getName(), e);
@@ -98,5 +90,35 @@ public class GifMigrationController {
         String result = "Migration complete — success: " + success + ", failed: " + failed;
         log.info(result);
         return ResponseEntity.ok(result);
+    }
+
+    private byte[] downloadWithRetry(HttpClient httpClient, String url, String exerciseName) throws InterruptedException {
+        int[] delays = {2000, 5000, 10000}; // 2s, 5s, 10s
+
+        for (int attempt = 0; attempt <= delays.length; attempt++) {
+            try {
+                HttpRequest request = HttpRequest.newBuilder()
+                        .uri(URI.create(url))
+                        .GET()
+                        .build();
+
+                HttpResponse<byte[]> response = httpClient.send(request, HttpResponse.BodyHandlers.ofByteArray());
+
+                if (response.statusCode() == 200) {
+                    return response.body();
+                } else if (response.statusCode() == 429 && attempt < delays.length) {
+                    log.warn("Rate limited on {} — retrying in {}ms (attempt {}/{})",
+                            exerciseName, delays[attempt], attempt + 1, delays.length);
+                    Thread.sleep(delays[attempt]);
+                } else {
+                    log.warn("Failed to download GIF for {}: status {}", exerciseName, response.statusCode());
+                    return null;
+                }
+            } catch (Exception e) {
+                log.error("Download error for {}: {}", exerciseName, e.getMessage());
+                return null;
+            }
+        }
+        return null;
     }
 }
